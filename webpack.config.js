@@ -23,6 +23,9 @@ module.exports = {
   plugins: [
     // new MiniCssExtractPlugin(),
   ],
+  devServer: {
+    liveReload: false,
+  },
   module: {
     rules: [
       {
