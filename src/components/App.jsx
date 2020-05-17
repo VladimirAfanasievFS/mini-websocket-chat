@@ -1,7 +1,12 @@
 import React from 'react';
-import Formik from './components/Formik';
+// import Formik from './components/Formik';
+import { useDispatch } from 'redux';
+import {
+  Formik, Form, Field, ErrorMessage,
+} from 'formik';
+import { increment } from '../reducers/index';
 
-const FirstComponent = ({ gon }) => {
+const App = ({ gon }) => {
   const { channels } = gon;
   return (
     <div className="row h-100 pb-3">
@@ -31,24 +36,28 @@ const FirstComponent = ({ gon }) => {
             </div>
           </div>
           <div className="mt-auto">
-            <form noValidate="" className="">
-              <div className="form-group">
-                <div className="input-group">
-                  <input name="body" className="form-control" value="" />
-                  <div className="d-block invalid-feedback">
-                      &nbsp;
-                  </div>
+            <Formik
+              initialValues={{ inputChat: '' }}
+              onSubmit={(values, { setSubmitting }) => {
+                setTimeout(() => {
+                  alert(JSON.stringify(values, null, 2));
+                  setSubmitting(false);
+                }, 400);
+              }}
+            >
+              <Form className="input-group">
+                <Field className="form-control" name="inputChat" type="text" />
+                <div className="input-group-append">
+                  <button className="btn btn-outline-secondary" type="submit">Отправить</button>
                 </div>
-              </div>
-            </form>
+                <ErrorMessage name="inputChat" />
+              </Form>
+            </Formik>
           </div>
-
-
         </div>
       </div>
-      <Formik />
     </div>
   );
 };
 
-export default FirstComponent;
+export default App;

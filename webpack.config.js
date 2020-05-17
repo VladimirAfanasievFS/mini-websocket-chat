@@ -8,7 +8,7 @@ console.log('isProduction', isProduction);
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
   entry: [
-    `${__dirname}/src/index.js`,
+    `${__dirname}/src/index.jsx`,
   ],
   externals: {
     gon: 'gon',
@@ -23,6 +23,7 @@ module.exports = {
   plugins: [
     // new MiniCssExtractPlugin(),
   ],
+  devtool: 'inline-source-map',
   devServer: {
     liveReload: false,
   },
