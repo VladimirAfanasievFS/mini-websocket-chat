@@ -23,6 +23,7 @@ module.exports = {
   plugins: [
     // new MiniCssExtractPlugin(),
   ],
+  
   devtool: 'inline-source-map',
   devServer: {
     liveReload: false,

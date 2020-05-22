@@ -43,7 +43,6 @@ export default (options) => {
   setUpStaticAssets(app);
 
   const io = socket(app.server);
-
   addRoutes(app, io, options.state || {});
 
   return app;
