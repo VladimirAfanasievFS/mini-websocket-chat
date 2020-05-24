@@ -1,4 +1,3 @@
-import _ from 'lodash';
 
 export const getInputChat2 = (state) => state.inputChat2;
 export const getChannels = ({ channels: { allIds, byId } }) => allIds.map((id) => byId[id]);
