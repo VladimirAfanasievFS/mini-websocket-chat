@@ -19,7 +19,8 @@ import nickNameContext from './lib/context';
 // import store from './lib/store';
 import nickName from './lib/nickName';
 import reducers, { actions } from './slices';
-import {initialization} from './actions';
+import { initialization } from './actions';
+
 console.log('it works!');
 console.log('gon', gon);
 

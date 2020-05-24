@@ -5,7 +5,7 @@ import routes from '../routes';
 import { initialization } from '../actions';
 
 export const postChannel = createAsyncThunk(
-  'postchannelstatus',
+  'postChannelStatus',
   async ({ name }, { getState, requestId }) => {
     // const { currentRequestId, loading } = getState().users;
     // if (loading !== 'pending' || requestId !== currentRequestId) {
@@ -16,6 +16,42 @@ export const postChannel = createAsyncThunk(
         attributes: {
           name,
         },
+      },
+    });
+    return response.data;
+  },
+);
+export const renameChannel = createAsyncThunk(
+  'renameChannelStatus',
+  async ({ channelId, name }, { getState, requestId }) => {
+    // const { currentRequestId, loading } = getState().users;
+    // if (loading !== 'pending' || requestId !== currentRequestId) {
+    //   return null;
+    // }
+    const response = await Axios.patch(routes.channelPath(channelId), {
+      data: {
+        attributes: {
+          name,
+        },
+        id: channelId,
+      },
+    });
+    return response.data;
+  },
+);
+export const removeChannel = createAsyncThunk(
+  'renameChannelStatus',
+  async ({ channelId }, { getState, requestId }) => {
+    // const { currentRequestId, loading } = getState().users;
+    // if (loading !== 'pending' || requestId !== currentRequestId) {
+    //   return null;
+    // }
+    const response = await Axios.delete(routes.channelPath(channelId), {
+      data: {
+        attributes: {
+          id: channelId,
+        },
+        id: channelId,
       },
     });
     return response.data;
@@ -40,6 +76,21 @@ const channelsSlice = createSlice({
         currentChannelId: id,
       };
     },
+    renameChannel(state, { payload: { data } }) {
+      const { byId } = state;
+      return {
+        ...state,
+        byId: { ...byId, [data.id]: data.attributes },
+      };
+    },
+    removeChannel(state, { payload: { data } }) {
+      const { byId, allIds } = state;
+      return {
+        byId: _.omit(byId, data.id),
+        allIds: allIds.filter((item) => item !== data.id),
+        currentChannelId: 1,
+      };
+    },
   },
   extraReducers: {
     [initialization]: (state, action) => ({
@@ -50,5 +101,6 @@ const channelsSlice = createSlice({
   },
 });
 
+export const asyncActions = { postChannel, renameChannel, removeChannel };
 export const { actions } = channelsSlice;
 export default channelsSlice.reducer;
