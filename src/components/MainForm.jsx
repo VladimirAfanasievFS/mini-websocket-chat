@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlus, faMinus, faEdit, faSpinner, faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons';
+import { unwrapResult } from '@reduxjs/toolkit';
 import {
   getArrayChannels, getCurrentChannelId, getArrayMessages, messages, channels,
 } from '../selectors';
@@ -138,14 +139,17 @@ const MainForm = () => {
                   inputChat: '',
                 }}
                 onSubmit={async (values, { resetForm }) => {
-                  await dispatch(asyncActions.postMessage({
-                    channelId: currentChannelId,
-                    message: values.inputChat,
-                    nickName,
-                  })).then(() => {
+                  try {
+                    const resultAction = await dispatch(asyncActions.postMessage({
+                      channelId: currentChannelId,
+                      message: values.inputChat,
+                      nickName,
+                    }));
+                    unwrapResult(resultAction);
                     resetForm();
+                  } finally {
                     inputChatRef.current.focus();
-                  });
+                  }
                 }}
               >
                 {() => (
