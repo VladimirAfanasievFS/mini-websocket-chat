@@ -87,6 +87,9 @@ const MainForm = () => {
     <>
       <div className="row h-100 pb-3">
         <div className="col-3 border-right">
+          <div className="d-flex p-2 mb-2 bg-info text-white">
+            <b>{`Current User: ${nickName}`}</b>
+          </div>
           <div className="d-flex mb-2">
             <span>Channels</span>
             <button
@@ -116,7 +119,6 @@ const MainForm = () => {
               );
             })}
           </ul>
-
         </div>
         <div className="col h-100">
           <div className="d-flex flex-column h-100">

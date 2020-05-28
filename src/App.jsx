@@ -15,7 +15,6 @@ import { Provider } from 'react-redux';
 import { normalize, schema } from 'normalizr';
 import MainForm from './components/MainForm';
 import NickNameContext from './lib/context';
-// import store from './lib/store';
 import nickName from './lib/nickName';
 import reducers from './slices';
 import { initialization } from './actions';
