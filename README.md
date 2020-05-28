@@ -16,7 +16,7 @@ $ make install
 
 ```sh
 $ make start
-# open http://localhost:5000
+# open  http://localhost:5000
 ```
 
 * [My link ](https://vova-frontend.herokuapp.com/)
