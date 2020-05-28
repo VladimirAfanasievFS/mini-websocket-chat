@@ -32,7 +32,7 @@ export const renameChannel = createAsyncThunk(
   },
 );
 export const removeChannel = createAsyncThunk(
-  'renameChannelStatus',
+  'removeChannelStatus',
   async ({ channelId }) => {
     const response = await Axios.delete(routes.channelPath(channelId), {
       data: {
@@ -113,10 +113,6 @@ const channelsSlice = createSlice({
       ...state,
       error: action.error,
     }),
-    // [removeChannel.rejected]: (state, action) => ({
-    //   ...state,
-    //   error: action.error,
-    // }),
   },
 });
 
