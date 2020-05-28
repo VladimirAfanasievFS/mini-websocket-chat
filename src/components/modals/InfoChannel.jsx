@@ -1,18 +1,18 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { actions, asyncActions } from '../../slices';
+import { actions } from '../../slices';
 import { modalProps } from '../../selectors';
 
-const RemoveChannel = () => {
+const InfoChannel = () => {
   const dispatch = useDispatch();
-  const { id } = useSelector(modalProps);
+  const { message } = useSelector(modalProps);
+  console.log('InfoChannel -> message', message);
   const handleHide = () => {
     dispatch(actions.hideModal());
   };
 
   const handleSubmit = () => {
-    dispatch(asyncActions.removeChannel({ channelId: id }));
     handleHide();
   };
 
@@ -20,15 +20,18 @@ const RemoveChannel = () => {
   return (
     <Modal show onHide={handleHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Remove channel</Modal.Title>
+        <Modal.Title>Info</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Button type="submit" className="btn btn-primary">Confirm remove channel</Button>
+          <div className="alert alert-danger" role="alert">
+            {message}
+          </div>
+          <Button type="submit" className="btn btn-primary">OK</Button>
         </Form>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default RemoveChannel;
+export default InfoChannel;

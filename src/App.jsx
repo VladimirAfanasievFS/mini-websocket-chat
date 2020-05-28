@@ -34,7 +34,7 @@ const App = () => {
   const normalizedData = normalize(gon, mySchema2);
 
   const middleware = getDefaultMiddleware({
-    immutableCheck: false,
+    immutableCheck: true,
     serializableCheck: false,
     thunk: true,
   });

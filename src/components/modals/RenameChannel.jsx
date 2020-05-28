@@ -1,9 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, FormGroup, FormControl } from 'react-bootstrap';
+import {
+  Modal, FormGroup, FormControl, Form, Button,
+} from 'react-bootstrap';
+import * as Yup from 'yup';
 import { actions, asyncActions } from '../../slices';
 import { modalProps } from '../../selectors';
+
 
 const RenameChannel = () => {
   const dispatch = useDispatch();
@@ -18,6 +22,13 @@ const RenameChannel = () => {
       handleHide();
     },
     initialValues: { body: channel.name },
+    validationSchema:
+      Yup.object().shape({
+        body: Yup.string()
+          .min(3, 'Too Short!')
+          .max(10, 'Too Long!')
+          .required('Required!'),
+      }),
   });
 
   const inputRef = useRef();
@@ -31,7 +42,7 @@ const RenameChannel = () => {
         <Modal.Title>Rename channel</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={f.handleSubmit}>
+        <Form onSubmit={f.handleSubmit}>
           <FormGroup>
             <FormControl
               ref={inputRef}
@@ -39,10 +50,14 @@ const RenameChannel = () => {
               onBlur={f.handleBlur}
               value={f.values.body}
               name="body"
+              isInvalid={!!f.errors.body}
             />
+            <Form.Control.Feedback type="invalid">
+              {f.errors.body}
+            </Form.Control.Feedback>
           </FormGroup>
-          <input type="submit" className="btn btn-primary" value="submit" />
-        </form>
+          <Button type="submit" className="btn btn-primary">Confirm rename channel</Button>
+        </Form>
       </Modal.Body>
     </Modal>
   );

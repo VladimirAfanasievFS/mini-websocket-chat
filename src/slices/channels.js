@@ -6,11 +6,7 @@ import { initialization } from '../actions';
 
 export const postChannel = createAsyncThunk(
   'postChannelStatus',
-  async ({ name }, { getState, requestId }) => {
-    // const { currentRequestId, statusRequest } = getState().users;
-    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
-    //   return null;
-    // }
+  async ({ name }) => {
     const response = await Axios.post(routes.channelsPath(), {
       data: {
         attributes: {
@@ -23,11 +19,7 @@ export const postChannel = createAsyncThunk(
 );
 export const renameChannel = createAsyncThunk(
   'renameChannelStatus',
-  async ({ channelId, name }, { getState, requestId }) => {
-    // const { currentRequestId, statusRequest } = getState().users;
-    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
-    //   return null;
-    // }
+  async ({ channelId, name }) => {
     const response = await Axios.patch(routes.channelPath(channelId), {
       data: {
         attributes: {
@@ -41,11 +33,7 @@ export const renameChannel = createAsyncThunk(
 );
 export const removeChannel = createAsyncThunk(
   'renameChannelStatus',
-  async ({ channelId }, { getState, requestId }) => {
-    // const { currentRequestId, statusRequest } = getState().users;
-    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
-    //   return null;
-    // }
+  async ({ channelId }) => {
     const response = await Axios.delete(routes.channelPath(channelId), {
       data: {
         attributes: {
@@ -97,7 +85,38 @@ const channelsSlice = createSlice({
       byId: action.payload.entities.channels,
       allIds: action.payload.result.channels,
       currentChannelId: action.payload.result.currentChannelId,
+      statusRequest: 'idle',
+      currentRequestId: null,
+      error: null,
     }),
+    [postChannel.fulfilled]: (state) => ({
+      ...state,
+      error: null,
+    }),
+    [postChannel.rejected]: (state, action) => ({
+      ...state,
+      error: action.error,
+    }),
+    [renameChannel.fulfilled]: (state) => ({
+      ...state,
+      error: null,
+    }),
+    [renameChannel.rejected]: (state, action) => ({
+      ...state,
+      error: action.error,
+    }),
+    [removeChannel.fulfilled]: (state) => ({
+      ...state,
+      error: null,
+    }),
+    [removeChannel.rejected]: (state, action) => ({
+      ...state,
+      error: action.error,
+    }),
+    // [removeChannel.rejected]: (state, action) => ({
+    //   ...state,
+    //   error: action.error,
+    // }),
   },
 });
 

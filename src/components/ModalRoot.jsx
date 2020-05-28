@@ -4,11 +4,13 @@ import AddChannel from './modals/AddChannel';
 import { modalType } from '../selectors';
 import RenameChannel from './modals/RenameChannel';
 import RemoveChannel from './modals/RemoveChannel';
+import InfoChannel from './modals/InfoChannel';
 
 const MODAL_COMPONENTS = {
   ADD_CHANNEL: AddChannel,
   RENAME_CHANNEL: RenameChannel,
   REMOVE_CHANNEL: RemoveChannel,
+  INFO_CHANNEL: InfoChannel,
   /* other modals */
 };
 

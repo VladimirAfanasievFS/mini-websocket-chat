@@ -1,8 +1,12 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { Modal, FormGroup, FormControl } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import {
+  Modal, FormGroup, FormControl, Form, Button,
+} from 'react-bootstrap';
+import * as Yup from 'yup';
 import { actions, asyncActions } from '../../slices';
+
 
 const AddChannel = () => {
   const dispatch = useDispatch();
@@ -12,11 +16,27 @@ const AddChannel = () => {
   };
 
   const f = useFormik({
-    onSubmit: (values) => {
-      dispatch(asyncActions.postChannel({ name: `${values.body}` }));
-      handleHide();
+    onSubmit: async (values) => {
+      try {
+        const ddd = await dispatch(asyncActions.postChannel({ name: `${values.body}` }));
+        console.log(ddd);
+        handleHide();
+      } catch (err) {
+        dispatch(actions.showModal({
+          modalType: 'INFO_CHANNEL',
+          modalProps: { err },
+        }));
+      }
     },
     initialValues: { body: '' },
+    initialErrors: { body: 'Required' },
+    validationSchema:
+      Yup.object().shape({
+        body: Yup.string()
+          .min(3, 'Too Short!')
+          .max(10, 'Too Long!')
+          .required('Required!'),
+      }),
   });
 
   const inputRef = useRef();
@@ -30,7 +50,7 @@ const AddChannel = () => {
         <Modal.Title>Add new channel</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={f.handleSubmit}>
+        <Form onSubmit={f.handleSubmit}>
           <FormGroup>
             <FormControl
               ref={inputRef}
@@ -38,10 +58,14 @@ const AddChannel = () => {
               onBlur={f.handleBlur}
               value={f.values.body}
               name="body"
+              isInvalid={!!f.errors.body}
             />
+            <Form.Control.Feedback type="invalid">
+              {f.errors.body}
+            </Form.Control.Feedback>
           </FormGroup>
-          <input type="submit" className="btn btn-primary" value="submit" />
-        </form>
+          <Button disabled={f.errors.body} type="submit" className="btn btn-primary">Confirm add channel</Button>
+        </Form>
       </Modal.Body>
     </Modal>
   );

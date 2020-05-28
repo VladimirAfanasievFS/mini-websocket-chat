@@ -8,7 +8,7 @@ import {
   faPlus, faMinus, faEdit, faSpinner, faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  getChannels, getCurrentChannelId, getMessages, getCurrentChannel, messages,
+  getArrayChannels, getCurrentChannelId, getArrayMessages, messages, channels,
 } from '../selectors';
 import NickNameContext from '../lib/context';
 import { actions, asyncActions } from '../slices';
@@ -18,19 +18,25 @@ import ModalRoot from './ModalRoot';
 
 const MainForm = () => {
   const currentChannelId = useSelector(getCurrentChannelId);
-  const currentChannelMessages = useSelector(getMessages(currentChannelId));
-  const channels = useSelector(getChannels);
-  const currentChannel = useSelector(getCurrentChannel);
+  const currentChannelMessages = useSelector(getArrayMessages(currentChannelId));
+  const ArrayChannels = useSelector(getArrayChannels);
   const isMessagePending = useSelector(messages).statusRequest === 'pending';
   const errorMessages = useSelector(messages).error;
+  const errorChannels = useSelector(channels).error;
   const dispatch = useDispatch();
   const nickName = useContext(NickNameContext);
   const inputChatRef = useRef();
-
   const handleClickChannel = (id) => () => {
     dispatch(actions.changeChannel({ id }));
   };
-
+  useEffect(() => {
+    if (errorChannels) {
+      dispatch(actions.showModal({
+        modalType: 'INFO_CHANNEL',
+        modalProps: { message: errorChannels.message },
+      }));
+    }
+  }, [dispatch, errorChannels]);
   useEffect(() => {
     console.log('UseEffect->socket.on(newMessage', socket);
     socket.on('newMessage', (data) => {
@@ -47,37 +53,36 @@ const MainForm = () => {
     });
   }, [dispatch]);
 
-  const renderSettingButtons = () => (
-    <div className="btn-toolbar m-0 border justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
-      <div className="btn-group" role="group" aria-label="Third group">
-        <button
-          type="button"
-          onClick={() => {
-            console.log('App -> currrentChannel', currentChannel);
-            dispatch(actions.showModal({
-              modalType: 'RENAME_CHANNEL',
-              modalProps: { channel: currentChannel },
-            }));
-          }}
-          className="btn btn-link"
-        >
-          <FontAwesomeIcon icon={faEdit} />
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            dispatch(actions.showModal({
-              modalType: 'REMOVE_CHANNEL',
-              modalProps: { id: currentChannelId },
-            }));
-          }}
-          className="btn btn-link"
-        >
-          <FontAwesomeIcon icon={faMinus} />
-        </button>
-      </div>
+  const renderSettingButtons = (channel) => (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          console.log('App -> currrentChannel', channel);
+          dispatch(actions.showModal({
+            modalType: 'RENAME_CHANNEL',
+            modalProps: { channel },
+          }));
+        }}
+        className="btn btn-link"
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          dispatch(actions.showModal({
+            modalType: 'REMOVE_CHANNEL',
+            modalProps: { id: channel.id },
+          }));
+        }}
+        className="btn btn-link"
+      >
+        <FontAwesomeIcon icon={faMinus} />
+      </button>
     </div>
   );
+
   return (
     <>
       <div className="row h-100 pb-3">
@@ -98,13 +103,15 @@ const MainForm = () => {
             </button>
           </div>
           <ul className="nav flex-column nav-pills nav-fill">
-            {channels && channels.map((channel) => {
-              const channelClass = cn('nav-link btn btn-block', { active: channel.id === currentChannelId });
+            {ArrayChannels && ArrayChannels.map((channel) => {
+              const channelClass = cn('nav-link btn', { active: channel.id === currentChannelId });
+
               return (
-                <li key={channel.id} className="nav-item">
+                <li key={channel.id} className="nav-item d-flex justify-content-between">
                   <button onClick={handleClickChannel(channel.id)} type="button" className={channelClass}>
                     { channel.name }
                   </button>
+                  {channel.removable && renderSettingButtons(channel) }
                 </li>
               );
             })}
@@ -113,9 +120,6 @@ const MainForm = () => {
         </div>
         <div className="col h-100">
           <div className="d-flex flex-column h-100">
-
-            { currentChannel.removable && renderSettingButtons() }
-
             <div id="messages-box" className="chat-messages overflow-auto mb-3">
               {currentChannelMessages && currentChannelMessages.map((message) => (
                 <div>
