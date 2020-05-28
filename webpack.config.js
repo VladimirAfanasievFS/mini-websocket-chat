@@ -1,5 +1,3 @@
-// @ts-check
-
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 // const isDevelopment = !isProduction;
@@ -23,7 +21,6 @@ module.exports = {
   plugins: [
     // new MiniCssExtractPlugin(),
   ],
-  
   devtool: 'inline-source-map',
   devServer: {
     liveReload: false,
