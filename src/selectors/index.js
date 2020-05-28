@@ -8,3 +8,4 @@ export const getCurrentChannelId = ({ channels }) => channels.currentChannelId;
 export const modalType = (state) => state.modals.modalType;
 export const modalProps = (state) => state.modals.modalProps;
 export const getCurrentChannel = ({ channels }) => channels.byId[channels.currentChannelId];
+export const messages = (state) => state.messages;

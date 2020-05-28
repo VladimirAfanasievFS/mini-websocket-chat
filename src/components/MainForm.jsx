@@ -1,33 +1,36 @@
 import React, { useContext, useRef, useEffect } from 'react';
 // import Formik from './components/Formik';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Formik, Form, Field, ErrorMessage,
-} from 'formik';
+import { Formik, Form, Field } from 'formik';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import {
-  getChannels, getCurrentChannelId, getMessages, getCurrentChannel,
+  faPlus, faMinus, faEdit, faSpinner, faPaperPlane,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  getChannels, getCurrentChannelId, getMessages, getCurrentChannel, messages,
 } from '../selectors';
-import nickNameContext from '../lib/context';
+import NickNameContext from '../lib/context';
 import { actions, asyncActions } from '../slices';
 import socket from '../socket';
 import ModalRoot from './ModalRoot';
 
 
-const App = () => {
+const MainForm = () => {
   const currentChannelId = useSelector(getCurrentChannelId);
-  const messages = useSelector(getMessages(currentChannelId));
+  const currentChannelMessages = useSelector(getMessages(currentChannelId));
   const channels = useSelector(getChannels);
   const currentChannel = useSelector(getCurrentChannel);
-
+  const isMessagePending = useSelector(messages).statusRequest === 'pending';
+  const errorMessages = useSelector(messages).error;
   const dispatch = useDispatch();
-  const nickName = useContext(nickNameContext);
+  const nickName = useContext(NickNameContext);
   const inputChatRef = useRef();
+
   const handleClickChannel = (id) => () => {
     dispatch(actions.changeChannel({ id }));
   };
+
   useEffect(() => {
     console.log('UseEffect->socket.on(newMessage', socket);
     socket.on('newMessage', (data) => {
@@ -114,7 +117,7 @@ const App = () => {
             { currentChannel.removable && renderSettingButtons() }
 
             <div id="messages-box" className="chat-messages overflow-auto mb-3">
-              {messages && messages.map((message) => (
+              {currentChannelMessages && currentChannelMessages.map((message) => (
                 <div>
                   <b>{message.nickName}</b>
                   :
@@ -128,24 +131,38 @@ const App = () => {
                 initialValues={{
                   inputChat: '',
                 }}
-                onSubmit={(values, { resetForm }) => {
-                  dispatch(asyncActions.postMessage({
+                onSubmit={async (values, { resetForm }) => {
+                  await dispatch(asyncActions.postMessage({
                     channelId: currentChannelId,
                     message: values.inputChat,
                     nickName,
-                  }));
-                  resetForm();
-                  inputChatRef.current.focus();
+                  })).then(() => {
+                    resetForm();
+                    inputChatRef.current.focus();
+                  });
                 }}
               >
-                <Form className="input-group">
-                  <Field className="form-control" innerRef={inputChatRef} name="inputChat" type="text" />
-                  <div className="input-group-append">
-                    <button className="btn btn-outline-secondary" type="submit">Отправить</button>
-                  </div>
-                  <ErrorMessage name="inputChat" />
-                  {/* {touched.inputChat && error.inputChat ? error.inputChat : null} */}
-                </Form>
+                {() => (
+                  <>
+                    { errorMessages && (
+                      <div className="alert alert-danger" role="alert">
+                        {errorMessages.message}
+                      </div>
+                    )}
+                    <Form className="input-group">
+                      <Field className="form-control" innerRef={inputChatRef} name="inputChat" type="text" disabled={isMessagePending} />
+                      <div className="input-group-append">
+                        <button className="btn btn-outline-secondary" type="submit">
+                          {isMessagePending
+                            ? <FontAwesomeIcon icon={faSpinner} spin />
+                            : <FontAwesomeIcon icon={faPaperPlane} /> }
+                        </button>
+                      </div>
+
+                    </Form>
+
+                  </>
+                )}
               </Formik>
             </div>
           </div>
@@ -156,4 +173,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default MainForm;

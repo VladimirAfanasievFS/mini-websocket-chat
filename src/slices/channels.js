@@ -7,8 +7,8 @@ import { initialization } from '../actions';
 export const postChannel = createAsyncThunk(
   'postChannelStatus',
   async ({ name }, { getState, requestId }) => {
-    // const { currentRequestId, loading } = getState().users;
-    // if (loading !== 'pending' || requestId !== currentRequestId) {
+    // const { currentRequestId, statusRequest } = getState().users;
+    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
     //   return null;
     // }
     const response = await Axios.post(routes.channelsPath(), {
@@ -24,8 +24,8 @@ export const postChannel = createAsyncThunk(
 export const renameChannel = createAsyncThunk(
   'renameChannelStatus',
   async ({ channelId, name }, { getState, requestId }) => {
-    // const { currentRequestId, loading } = getState().users;
-    // if (loading !== 'pending' || requestId !== currentRequestId) {
+    // const { currentRequestId, statusRequest } = getState().users;
+    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
     //   return null;
     // }
     const response = await Axios.patch(routes.channelPath(channelId), {
@@ -42,8 +42,8 @@ export const renameChannel = createAsyncThunk(
 export const removeChannel = createAsyncThunk(
   'renameChannelStatus',
   async ({ channelId }, { getState, requestId }) => {
-    // const { currentRequestId, loading } = getState().users;
-    // if (loading !== 'pending' || requestId !== currentRequestId) {
+    // const { currentRequestId, statusRequest } = getState().users;
+    // if (statusRequest !== 'pending' || requestId !== currentRequestId) {
     //   return null;
     // }
     const response = await Axios.delete(routes.channelPath(channelId), {

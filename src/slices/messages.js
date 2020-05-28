@@ -7,10 +7,10 @@ import { initialization } from '../actions';
 export const postMessage = createAsyncThunk(
   'postMessageStatus',
   async ({ channelId, message, nickName }, { getState, requestId }) => {
-    // const { currentRequestId, loading } = getState().users;
-    // if (loading !== 'pending' || requestId !== currentRequestId) {
-    //   return null;
-    // }
+    const { currentRequestId, statusRequest } = getState().messages;
+    if (statusRequest !== 'pending' || requestId !== currentRequestId) {
+      return null;
+    }
     const response = await Axios.post(routes.channelMessagesPath(channelId), {
       data: {
         attributes: {
@@ -30,15 +30,10 @@ const messagesSlice = createSlice({
   initialState: {
   },
   reducers: {
-    createPost(state, action) {
-      return {
-        ...state,
-        values: action.payload,
-      };
-    },
     addMessage(state, { payload: { data } }) {
       const { byId, allIds } = state;
       return {
+        ...state,
         byId: { ...byId, [data.id]: data.attributes },
         allIds: [...allIds, data.id],
       };
@@ -46,30 +41,40 @@ const messagesSlice = createSlice({
   },
   extraReducers: {
     [initialization]: (state, action) => ({
+      ...state,
       byId: action.payload.entities.messages,
       allIds: action.payload.result.messages,
+      statusRequest: 'idle',
+      currentRequestId: null,
+      error: null,
     }),
     [postMessage.pending]: (state, action) => {
-      if (state.loading === 'idle') {
-        state.loading = 'pending';
-        state.currentRequestId = action.meta.requestId;
-      }
+      console.log('pending', action);
+
+      return (state.statusRequest === 'idle') ? {
+        ...state,
+        statusRequest: 'pending',
+        error: null,
+        currentRequestId: action.meta.requestId,
+      } : state;
     },
     [postMessage.fulfilled]: (state, action) => {
-      const { requestId } = action.meta;
-      if (state.loading === 'pending' && state.currentRequestId === requestId) {
-        state.loading = 'idle';
-        state.entities.push(action.payload);
-        state.currentRequestId = undefined;
-      }
+      const { meta: { requestId } } = action;
+      return (state.statusRequest === 'pending' && state.currentRequestId === requestId) ? {
+        ...state,
+        statusRequest: 'idle',
+        error: null,
+        currentRequestId: null,
+      } : state;
     },
     [postMessage.rejected]: (state, action) => {
-      const { requestId } = action.meta;
-      if (state.loading === 'pending' && state.currentRequestId === requestId) {
-        state.loading = 'idle';
-        state.error = action.error;
-        state.currentRequestId = undefined;
-      }
+      const { meta: { requestId } } = action;
+      return (state.statusRequest === 'pending' && state.currentRequestId === requestId) ? {
+        ...state,
+        statusRequest: 'idle',
+        error: action.error,
+        currentRequestId: null,
+      } : state;
     },
   },
 });
