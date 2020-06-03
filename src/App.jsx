@@ -16,7 +16,8 @@ import { normalize, schema } from 'normalizr';
 import MainForm from './components/MainForm';
 import NickNameContext from './lib/context';
 import nickName from './lib/nickName';
-import reducers from './slices';
+import reducers, { actions } from './slices';
+import socket from './socket';
 
 const App = () => {
   console.log('it works!');
@@ -30,12 +31,6 @@ const App = () => {
   };
 
   const normalizedData = normalize(gon, mySchema2);
-
-  const middleware = getDefaultMiddleware({
-    immutableCheck: false,
-    serializableCheck: false,
-    thunk: true,
-  });
 
   const preloadedState = {
     channels: {
@@ -57,14 +52,24 @@ const App = () => {
 
   const store = configureStore({
     reducer: reducers,
-    middleware,
     devTools: process.env.NODE_ENV !== 'production',
     preloadedState,
   });
 
-  // @ts-ignore
-  // store.dispatch(initialization(normalizedData));
+  const { dispatch } = store;
 
+  socket.on('newMessage', (data) => {
+    dispatch(actions.addMessage(data));
+  });
+  socket.on('newChannel', (data) => {
+    dispatch(actions.addChannel(data));
+  });
+  socket.on('renameChannel', (data) => {
+    dispatch(actions.renameChannel(data));
+  });
+  socket.on('removeChannel', (data) => {
+    dispatch(actions.removeChannel(data));
+  });
 
   ReactDOM.render(
     <Provider store={store}>

@@ -13,7 +13,6 @@ import {
 } from '../selectors';
 import NickNameContext from '../lib/context';
 import { actions, asyncActions } from '../slices';
-import socket from '../socket';
 import ModalRoot from './ModalRoot';
 
 
@@ -38,21 +37,6 @@ const MainForm = () => {
       }));
     }
   }, [dispatch, errorChannels]);
-  useEffect(() => {
-    console.log('UseEffect->socket.on(newMessage', socket);
-    socket.on('newMessage', (data) => {
-      dispatch(actions.addMessage(data));
-    });
-    socket.on('newChannel', (data) => {
-      dispatch(actions.addChannel(data));
-    });
-    socket.on('renameChannel', (data) => {
-      dispatch(actions.renameChannel(data));
-    });
-    socket.on('removeChannel', (data) => {
-      dispatch(actions.removeChannel(data));
-    });
-  }, [dispatch]);
 
   const renderSettingButtons = (channel) => (
     <div>
@@ -125,7 +109,7 @@ const MainForm = () => {
           <div className="d-flex flex-column h-100">
             <div id="messages-box" className="chat-messages overflow-auto mb-3">
               {currentChannelMessages && currentChannelMessages.map((message) => (
-                <div>
+                <div key={message.id}>
                   <b>{message.nickName}</b>
                   :
                   {' '}
