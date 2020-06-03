@@ -37,27 +37,29 @@ const App = () => {
     thunk: true,
   });
 
+  const preloadedState = {
+    channels: {
+      byId: normalizedData.entities.channels,
+      allIds: normalizedData.result.channels,
+      currentChannelId: normalizedData.result.currentChannelId,
+      statusRequest: 'idle',
+      currentRequestId: null,
+      error: null,
+    },
+    messages: {
+      byId: normalizedData.entities.messages,
+      allIds: normalizedData.result.messages,
+      statusRequest: 'idle',
+      currentRequestId: null,
+      error: null,
+    },
+  };
+
   const store = configureStore({
     reducer: reducers,
     middleware,
     devTools: process.env.NODE_ENV !== 'production',
-    preloadedState: {
-      channels: {
-        byId: normalizedData.entities.channels,
-        allIds: normalizedData.result.channels,
-        currentChannelId: normalizedData.result.currentChannelId,
-        statusRequest: 'idle',
-        currentRequestId: null,
-        error: null,
-      },
-      messages: {
-        byId: normalizedData.entities.messages,
-        allIds: normalizedData.result.messages,
-        statusRequest: 'idle',
-        currentRequestId: null,
-        error: null,
-      },
-    },
+    preloadedState,
   });
 
   // @ts-ignore
