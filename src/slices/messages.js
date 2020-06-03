@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import _ from 'lodash';
 import routes from '../routes';
-import { initialization } from '../actions';
 import { actions as channelActions } from './channels';
 
 
@@ -42,14 +41,6 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
-    [initialization]: (state, action) => ({
-      ...state,
-      byId: action.payload.entities.messages,
-      allIds: action.payload.result.messages,
-      statusRequest: 'idle',
-      currentRequestId: null,
-      error: null,
-    }),
     [postMessage.pending]: (state, action) => {
       console.log('pending', action);
 

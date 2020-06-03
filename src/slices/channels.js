@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import _ from 'lodash';
 import routes from '../routes';
-import { initialization } from '../actions';
 
 export const postChannel = createAsyncThunk(
   'postChannelStatus',
@@ -81,14 +80,6 @@ const channelsSlice = createSlice({
     },
   },
   extraReducers: {
-    [initialization]: (state, action) => ({
-      byId: action.payload.entities.channels,
-      allIds: action.payload.result.channels,
-      currentChannelId: action.payload.result.currentChannelId,
-      statusRequest: 'idle',
-      currentRequestId: null,
-      error: null,
-    }),
     [postChannel.fulfilled]: (state) => ({
       ...state,
       error: null,

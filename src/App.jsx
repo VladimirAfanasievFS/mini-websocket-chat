@@ -17,7 +17,6 @@ import MainForm from './components/MainForm';
 import NickNameContext from './lib/context';
 import nickName from './lib/nickName';
 import reducers from './slices';
-import { initialization } from './actions';
 
 const App = () => {
   console.log('it works!');
@@ -33,7 +32,7 @@ const App = () => {
   const normalizedData = normalize(gon, mySchema2);
 
   const middleware = getDefaultMiddleware({
-    immutableCheck: true,
+    immutableCheck: false,
     serializableCheck: false,
     thunk: true,
   });
@@ -42,10 +41,27 @@ const App = () => {
     reducer: reducers,
     middleware,
     devTools: process.env.NODE_ENV !== 'production',
+    preloadedState: {
+      channels: {
+        byId: normalizedData.entities.channels,
+        allIds: normalizedData.result.channels,
+        currentChannelId: normalizedData.result.currentChannelId,
+        statusRequest: 'idle',
+        currentRequestId: null,
+        error: null,
+      },
+      messages: {
+        byId: normalizedData.entities.messages,
+        allIds: normalizedData.result.messages,
+        statusRequest: 'idle',
+        currentRequestId: null,
+        error: null,
+      },
+    },
   });
 
   // @ts-ignore
-  store.dispatch(initialization(normalizedData));
+  // store.dispatch(initialization(normalizedData));
 
 
   ReactDOM.render(
