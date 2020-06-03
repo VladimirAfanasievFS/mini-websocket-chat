@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
 
-const socket = io(document.URL, { transports: ['websocket'] });
-
-export default socket;
+const connectSocket = (url) => io(url, { transports: ['websocket'] });
+export default connectSocket;

@@ -7,7 +7,7 @@ import '../assets/application.scss';
 
 // @ts-ignore
 import gon from 'gon';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 
 import ReactDOM from 'react-dom';
 import React from 'react';
@@ -17,7 +17,7 @@ import MainForm from './components/MainForm';
 import NickNameContext from './lib/context';
 import nickName from './lib/nickName';
 import reducers, { actions } from './slices';
-import socket from './socket';
+import connectSocket from './socket';
 
 const App = () => {
   console.log('it works!');
@@ -57,6 +57,7 @@ const App = () => {
   });
 
   const { dispatch } = store;
+  const socket = connectSocket(document.URL);
 
   socket.on('newMessage', (data) => {
     dispatch(actions.addMessage(data));
