@@ -11,9 +11,9 @@ const RemoveChannel = () => {
     dispatch(actions.hideModal());
   };
 
-  const handleSubmit = () => {
-    dispatch(asyncActions.removeChannel({ channelId: id }));
-    handleHide();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(asyncActions.removeChannel({ channelId: id })).then(() => handleHide());
   };
 
 

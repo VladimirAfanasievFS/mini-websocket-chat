@@ -1,34 +1,19 @@
-import React, { useContext, useRef, useEffect } from 'react';
-// import Formik from './components/Formik';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
-import cn from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlus, faMinus, faEdit, faSpinner, faPaperPlane,
-} from '@fortawesome/free-solid-svg-icons';
-import { unwrapResult } from '@reduxjs/toolkit';
-import {
-  getArrayChannels, getCurrentChannelId, getArrayMessages, messages, channels,
-} from '../selectors';
-import NickNameContext from '../lib/context';
-import { actions, asyncActions } from '../slices';
+import { channels, getCurrentChannelId } from '../selectors';
+import { actions } from '../slices';
 import ModalRoot from './ModalRoot';
+import SideBar from './SideBar';
+import Chat from './Chat';
+import MessagesBox from './MessagesBox';
+import InputMessage from './InputMessage';
 
 
 const MainForm = () => {
-  const currentChannelId = useSelector(getCurrentChannelId);
-  const currentChannelMessages = useSelector(getArrayMessages(currentChannelId));
-  const ArrayChannels = useSelector(getArrayChannels);
-  const isMessagePending = useSelector(messages).statusRequest === 'pending';
-  const errorMessages = useSelector(messages).error;
   const errorChannels = useSelector(channels).error;
+  const currentChannelId = useSelector(getCurrentChannelId);
   const dispatch = useDispatch();
-  const nickName = useContext(NickNameContext);
-  const inputChatRef = useRef();
-  const handleClickChannel = (id) => () => {
-    dispatch(actions.changeChannel({ id }));
-  };
+
   useEffect(() => {
     if (errorChannels) {
       dispatch(actions.showModal({
@@ -38,131 +23,18 @@ const MainForm = () => {
     }
   }, [dispatch, errorChannels]);
 
-  const renderSettingButtons = (channel) => (
-    <div>
-      <button
-        type="button"
-        onClick={() => {
-          console.log('App -> currrentChannel', channel);
-          dispatch(actions.showModal({
-            modalType: 'RENAME_CHANNEL',
-            modalProps: { channel },
-          }));
-        }}
-        className="btn btn-link"
-      >
-        <FontAwesomeIcon icon={faEdit} />
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          dispatch(actions.showModal({
-            modalType: 'REMOVE_CHANNEL',
-            modalProps: { id: channel.id },
-          }));
-        }}
-        className="btn btn-link"
-      >
-        <FontAwesomeIcon icon={faMinus} />
-      </button>
-    </div>
-  );
 
   return (
     <>
-      <div className="row h-100 pb-3">
-        <div className="col-3 border-right">
-          <div className="d-flex p-2 mb-2 bg-info text-white">
-            <b>{`Current User: ${nickName}`}</b>
-          </div>
-          <div className="d-flex mb-2">
-            <span>Channels</span>
-            <button
-              type="button"
-              onClick={() => {
-                dispatch(actions.showModal({
-                  modalType: 'ADD_CHANNEL',
-                  modalProps: { },
-                }));
-              }}
-              className="btn btn-link p-0 ml-auto"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-          </div>
-          <ul className="nav flex-column nav-pills nav-fill">
-            {ArrayChannels && ArrayChannels.map((channel) => {
-              const channelClass = cn('nav-link btn', { active: channel.id === currentChannelId });
-
-              return (
-                <li key={channel.id} className="nav-item d-flex justify-content-between">
-                  <button onClick={handleClickChannel(channel.id)} type="button" className={channelClass}>
-                    { channel.name }
-                  </button>
-                  {channel.removable && renderSettingButtons(channel) }
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div className="col h-100">
-          <div className="d-flex flex-column h-100">
-            <div id="messages-box" className="chat-messages overflow-auto mb-3">
-              {currentChannelMessages && currentChannelMessages.map((message) => (
-                <div key={message.id}>
-                  <b>{message.nickName}</b>
-                  :
-                  {' '}
-                  {message.message}
-                </div>
-              ))}
-            </div>
-            <div className="mt-auto">
-              <Formik
-                initialValues={{
-                  inputChat: '',
-                }}
-                onSubmit={async (values, { resetForm }) => {
-                  try {
-                    const resultAction = await dispatch(asyncActions.postMessage({
-                      channelId: currentChannelId,
-                      message: values.inputChat,
-                      nickName,
-                    }));
-                    unwrapResult(resultAction);
-                    resetForm();
-                  } finally {
-                    inputChatRef.current.focus();
-                  }
-                }}
-              >
-                {() => (
-                  <>
-                    { errorMessages && (
-                      <div className="alert alert-danger" role="alert">
-                        {errorMessages.message}
-                      </div>
-                    )}
-                    <Form className="input-group">
-                      <Field className="form-control" innerRef={inputChatRef} name="inputChat" type="text" disabled={isMessagePending} />
-                      <div className="input-group-append">
-                        <button className="btn btn-outline-secondary" type="submit">
-                          {isMessagePending
-                            ? <FontAwesomeIcon icon={faSpinner} spin />
-                            : <FontAwesomeIcon icon={faPaperPlane} /> }
-                        </button>
-                      </div>
-
-                    </Form>
-
-                  </>
-                )}
-              </Formik>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ModalRoot />
+    <div className="row h-100 pb-3">
+      <SideBar className="col-3 border-right" />
+      <Chat className="col h-100">
+        <MessagesBox currentChannelId={currentChannelId} />
+        <InputMessage currentChannelId={currentChannelId} />
+      </Chat>
+      
+    </div>
+    <ModalRoot />
     </>
   );
 };

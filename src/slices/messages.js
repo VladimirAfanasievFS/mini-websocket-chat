@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import _ from 'lodash';
@@ -31,54 +32,36 @@ const messagesSlice = createSlice({
   initialState: {
   },
   reducers: {
-    addMessage(state, { payload: { data } }) {
-      const { byId, allIds } = state;
-      return {
-        ...state,
-        byId: { ...byId, [data.id]: data.attributes },
-        allIds: [...allIds, data.id],
-      };
+    addMessage(state, { payload: { data: { attributes } } }) {
+      state.entities.push(attributes);
     },
   },
   extraReducers: {
     [postMessage.pending]: (state, action) => {
-      console.log('pending', action);
-
-      return (state.statusRequest === 'idle') ? {
-        ...state,
-        statusRequest: 'pending',
-        error: null,
-        currentRequestId: action.meta.requestId,
-      } : state;
+      if (state.statusRequest === 'idle') {
+        state.statusRequest = 'pending';
+        state.error = null;
+        state.currentRequestId = action.meta.requestId;
+      }
     },
     [postMessage.fulfilled]: (state, action) => {
       const { meta: { requestId } } = action;
-      return (state.statusRequest === 'pending' && state.currentRequestId === requestId) ? {
-        ...state,
-        statusRequest: 'idle',
-        error: null,
-        currentRequestId: null,
-      } : state;
+      if (state.statusRequest === 'pending' && state.currentRequestId === requestId) {
+        state.statusRequest = 'idle';
+        state.error = null;
+        state.currentRequestId = null;
+      }
     },
     [postMessage.rejected]: (state, action) => {
       const { meta: { requestId } } = action;
-      return (state.statusRequest === 'pending' && state.currentRequestId === requestId) ? {
-        ...state,
-        statusRequest: 'idle',
-        error: action.error,
-        currentRequestId: null,
-      } : state;
+      if (state.statusRequest === 'pending' && state.currentRequestId === requestId) {
+        state.statusRequest = 'idle';
+        state.error = action.error;
+        state.currentRequestId = null;
+      }
     },
     [channelActions.removeChannel]: (state, { payload: { data } }) => {
-      const { byId } = state;
-      const filtered = _.filter(byId, (item) => item.channelId !== data.id);
-      const byIdResult = _.keyBy(filtered, 'id');
-      const allIdsResult = Object.keys(byIdResult).map(Number);
-      return {
-        ...state,
-        byId: byIdResult,
-        allIds: allIdsResult,
-      };
+      state.entities = state.entities.filter((item) => item.channelId !== data.id);
     },
 
   },

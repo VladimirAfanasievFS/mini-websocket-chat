@@ -12,7 +12,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import ReactDOM from 'react-dom';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { normalize, schema } from 'normalizr';
 import MainForm from './components/MainForm';
 import NickNameContext from './lib/context';
 import nickName from './lib/nickName';
@@ -22,28 +21,16 @@ import connectSocket from './socket';
 const App = () => {
   console.log('it works!');
   console.log('gon', gon);
-
-  const channels = new schema.Entity('channels');
-  const messages = new schema.Entity('messages');
-  const mySchema2 = {
-    channels: [channels],
-    messages: [messages],
-  };
-
-  const normalizedData = normalize(gon, mySchema2);
-
   const preloadedState = {
     channels: {
-      byId: normalizedData.entities.channels,
-      allIds: normalizedData.result.channels,
-      currentChannelId: normalizedData.result.currentChannelId,
+      entities: gon.channels,
+      currentChannelId: gon.currentChannelId,
       statusRequest: 'idle',
       currentRequestId: null,
       error: null,
     },
     messages: {
-      byId: normalizedData.entities.messages,
-      allIds: normalizedData.result.messages,
+      entities: gon.messages,
       statusRequest: 'idle',
       currentRequestId: null,
       error: null,

@@ -1,8 +1,7 @@
 
-export const getArrayChannels = ({ channels: { allIds, byId } }) => allIds.map((id) => byId[id]);
-export const getArrayMessages = (channelId) => ({ messages: { allIds, byId } }) => allIds
-  .filter((id) => byId[id].channelId === channelId)
-  .map((id) => byId[id]);
+export const getArrayChannels = ({ channels: { entities } }) => entities;
+export const getArrayMessages = (channelId) => ({ messages: { entities } }) => entities
+  .filter((entitie) => entitie.channelId === channelId);
 export const getCurrentChannelId = ({ channels }) => channels.currentChannelId;
 export const modalType = (state) => state.modals.modalType;
 export const modalProps = (state) => state.modals.modalProps;
