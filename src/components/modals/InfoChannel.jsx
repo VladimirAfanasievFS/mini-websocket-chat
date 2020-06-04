@@ -7,7 +7,6 @@ import { modalProps } from '../../selectors';
 const InfoChannel = () => {
   const dispatch = useDispatch();
   const { message } = useSelector(modalProps);
-  console.log('InfoChannel -> message', message);
   const handleHide = () => {
     dispatch(actions.hideModal());
   };

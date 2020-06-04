@@ -25,17 +25,14 @@ const MainForm = () => {
 
 
   return (
-    <>
-      <div className="row h-100 pb-3">
-        <SideBar className="col-3 border-right" />
-        <Chat className="col h-100">
-          <MessagesBox currentChannelId={currentChannelId} />
-          <InputMessage currentChannelId={currentChannelId} />
-        </Chat>
-
-      </div>
+    <div className="row h-100 pb-3">
+      <SideBar className="col-3 border-right" />
+      <Chat className="col h-100">
+        <MessagesBox currentChannelId={currentChannelId} />
+        <InputMessage currentChannelId={currentChannelId} />
+      </Chat>
       <ModalRoot />
-    </>
+    </div>
   );
 };
 

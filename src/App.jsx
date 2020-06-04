@@ -3,12 +3,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import '../assets/application.scss';
-
-
-// @ts-ignore
-import gon from 'gon';
 import { configureStore } from '@reduxjs/toolkit';
-
 import ReactDOM from 'react-dom';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -18,7 +13,7 @@ import nickName from './lib/nickName';
 import reducers, { actions } from './slices';
 import connectSocket from './socket';
 
-const App = () => {
+const App = (gon) => {
   console.log('it works!');
   console.log('gon', gon);
   const preloadedState = {

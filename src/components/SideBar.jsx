@@ -16,7 +16,6 @@ const SideBar = ({ className }) => {
     dispatch(actions.changeChannel({ id }));
   };
   const handleClickRename = (channel) => () => {
-    console.log('App -> currrentChannel', channel);
     dispatch(actions.showModal({
       modalType: 'RENAME_CHANNEL',
       modalProps: { channel },
