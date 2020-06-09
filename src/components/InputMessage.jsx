@@ -1,18 +1,18 @@
 import React, { useContext, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   Formik, Form, Field, ErrorMessage,
 } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { InputGroup, Button, Alert } from 'react-bootstrap';
 import { faSpinner, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { messages } from '../selectors';
+
 import NickNameContext from '../lib/context';
 import { asyncActions } from '../slices';
 
 const InputMessage = ({ currentChannelId }) => {
   const dispatch = useDispatch();
-  const isMessagePending = useSelector(messages).statusRequest === 'pending';
   const inputChatRef = useRef();
   const nickName = useContext(NickNameContext);
 
@@ -43,21 +43,19 @@ const InputMessage = ({ currentChannelId }) => {
           <>
             <ErrorMessage
               name="inputChat"
-              render={(msg) => (
-                <div className="alert alert-danger" role="alert">
-                  {msg}
-                </div>
-              )}
+              render={(msg) => <Alert variant="danger">{msg}</Alert>}
             />
-            <Form className="input-group">
-              <Field className="form-control" innerRef={inputChatRef} name="inputChat" type="text" disabled={isMessagePending} />
-              <div className="input-group-append">
-                <button className="btn btn-outline-secondary" type="submit">
-                  {isSubmitting
-                    ? <FontAwesomeIcon icon={faSpinner} spin />
-                    : <FontAwesomeIcon icon={faPaperPlane} />}
-                </button>
-              </div>
+            <Form>
+              <InputGroup aria-label="Basic exame">
+                <Field className="form-control" innerRef={inputChatRef} name="inputChat" type="text" disabled={isSubmitting} />
+                <InputGroup.Append>
+                  <Button variant="outline-secondary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting
+                      ? <FontAwesomeIcon icon={faSpinner} spin />
+                      : <FontAwesomeIcon icon={faPaperPlane} />}
+                  </Button>
+                </InputGroup.Append>
+              </InputGroup>
             </Form>
           </>
         )}
