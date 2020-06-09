@@ -9,7 +9,7 @@ import MessagesBox from './MessagesBox';
 import InputMessage from './InputMessage';
 
 
-const MainForm = () => {
+const App = () => {
   const errorChannels = useSelector(channels).error;
   const currentChannelId = useSelector(getCurrentChannelId);
   const dispatch = useDispatch();
@@ -36,4 +36,4 @@ const MainForm = () => {
   );
 };
 
-export default MainForm;
+export default App;
