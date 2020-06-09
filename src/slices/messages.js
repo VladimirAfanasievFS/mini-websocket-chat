@@ -8,11 +8,7 @@ import { actions as channelActions } from './channels';
 
 export const postMessage = createAsyncThunk(
   'postMessageStatus',
-  async ({ channelId, message, nickName }, { getState, requestId }) => {
-    const { currentRequestId, statusRequest } = getState().messages;
-    if (statusRequest !== 'pending' || requestId !== currentRequestId) {
-      return null;
-    }
+  async ({ channelId, message, nickName }) => {
     const response = await Axios.post(routes.channelMessagesPath(channelId), {
       data: {
         attributes: {
@@ -37,29 +33,6 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: {
-    [postMessage.pending]: (state, action) => {
-      if (state.statusRequest === 'idle') {
-        state.statusRequest = 'pending';
-        state.error = null;
-        state.currentRequestId = action.meta.requestId;
-      }
-    },
-    [postMessage.fulfilled]: (state, action) => {
-      const { meta: { requestId } } = action;
-      if (state.statusRequest === 'pending' && state.currentRequestId === requestId) {
-        state.statusRequest = 'idle';
-        state.error = null;
-        state.currentRequestId = null;
-      }
-    },
-    [postMessage.rejected]: (state, action) => {
-      const { meta: { requestId } } = action;
-      if (state.statusRequest === 'pending' && state.currentRequestId === requestId) {
-        state.statusRequest = 'idle';
-        state.error = action.error;
-        state.currentRequestId = null;
-      }
-    },
     [channelActions.removeChannel]: (state, { payload: { data } }) => {
       state.entities = state.entities.filter((item) => item.channelId !== data.id);
     },
