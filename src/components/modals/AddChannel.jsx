@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import {
   Modal, FormGroup, FormControl, Form, Button,
 } from 'react-bootstrap';
@@ -18,13 +19,13 @@ const AddChannel = () => {
   const f = useFormik({
     onSubmit: async (values) => {
       try {
-        const ddd = await dispatch(asyncActions.postChannel({ name: `${values.body}` }));
-        console.log(ddd);
+        const resultAction = await dispatch(asyncActions.postChannel({ name: `${values.body}` }));
+        unwrapResult(resultAction);
         handleHide();
-      } catch (err) {
+      } catch ({ message }) {
         dispatch(actions.showModal({
           modalType: 'INFO_CHANNEL',
-          modalProps: { err },
+          modalProps: { message },
         }));
       }
     },

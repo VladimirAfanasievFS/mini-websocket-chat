@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getArrayMessages } from '../selectors';
+import { getMessages } from '../selectors';
 
 const MessagesBox = ({ currentChannelId }) => {
-  const currentChannelMessages = useSelector(getArrayMessages(currentChannelId));
+  const currentChannelMessages = useSelector(getMessages(currentChannelId));
   return (
     <div id="messages-box" className="chat-messages overflow-auto mb-3">
       {currentChannelMessages && currentChannelMessages.map((message) => (

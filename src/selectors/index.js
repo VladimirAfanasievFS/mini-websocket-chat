@@ -1,6 +1,6 @@
 
-export const getArrayChannels = ({ channels: { entities } }) => entities;
-export const getArrayMessages = (channelId) => ({ messages: { entities } }) => entities
+export const getChannels = ({ channels: { entities } }) => entities;
+export const getMessages = (channelId) => ({ messages: { entities } }) => entities
   .filter((entitie) => entitie.channelId === channelId);
 export const getCurrentChannelId = ({ channels }) => channels.currentChannelId;
 export const modalType = (state) => state.modals.modalType;

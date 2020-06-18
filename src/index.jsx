@@ -21,15 +21,9 @@ export default (gon) => {
     channels: {
       entities: gon.channels,
       currentChannelId: gon.currentChannelId,
-      statusRequest: 'idle',
-      currentRequestId: null,
-      error: null,
     },
     messages: {
       entities: gon.messages,
-      statusRequest: 'idle',
-      currentRequestId: null,
-      error: null,
     },
   };
 

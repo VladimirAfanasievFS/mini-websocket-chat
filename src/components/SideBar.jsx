@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { getArrayChannels, getCurrentChannelId } from '../selectors';
+import { getChannels, getCurrentChannelId } from '../selectors';
 import NickNameContext from '../lib/context';
 import { actions } from '../slices';
 
@@ -11,7 +11,7 @@ const SideBar = ({ className }) => {
   const dispatch = useDispatch();
   const nickName = useContext(NickNameContext);
   const currentChannelId = useSelector(getCurrentChannelId);
-  const ArrayChannels = useSelector(getArrayChannels);
+  const channels = useSelector(getChannels);
   const handleClickChannel = (id) => () => {
     dispatch(actions.changeChannel({ id }));
   };
@@ -69,7 +69,7 @@ const SideBar = ({ className }) => {
         </button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill">
-        {ArrayChannels && ArrayChannels.map((channel) => {
+        {channels.map((channel) => {
           const channelClass = cn('nav-link btn', {
             active: channel.id === currentChannelId,
           });

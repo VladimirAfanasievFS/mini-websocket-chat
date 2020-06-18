@@ -64,14 +64,6 @@ const channelsSlice = createSlice({
       state.currentChannelId = 1;
     },
   },
-  extraReducers: {
-    [postChannel.fulfilled]: (state) => { state.error = null; },
-    [postChannel.rejected]: (state, action) => { state.error = action.error; },
-    [renameChannel.fulfilled]: (state) => { state.error = null; },
-    [renameChannel.rejected]: (state, action) => { state.error = action.error; },
-    [removeChannel.fulfilled]: (state) => { state.error = null; },
-    [removeChannel.rejected]: (state, action) => { state.error = action.error; },
-  },
 });
 
 export const asyncActions = { postChannel, renameChannel, removeChannel };

@@ -5,6 +5,7 @@ import {
   Modal, FormGroup, FormControl, Form, Button,
 } from 'react-bootstrap';
 import * as Yup from 'yup';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { actions, asyncActions } from '../../slices';
 import { modalProps } from '../../selectors';
 
@@ -17,9 +18,17 @@ const RenameChannel = () => {
   };
 
   const f = useFormik({
-    onSubmit: (values) => {
-      dispatch(asyncActions.renameChannel({ channelId: channel.id, name: `${values.body}` }));
-      handleHide();
+    onSubmit: async (values) => {
+      try {
+        const resultAction = await dispatch(asyncActions.renameChannel({ channelId: channel.id, name: `${values.body}` }));
+        unwrapResult(resultAction);
+        handleHide();
+      } catch ({ message }) {
+        dispatch(actions.showModal({
+          modalType: 'INFO_CHANNEL',
+          modalProps: { message },
+        }));
+      }
     },
     initialValues: { body: channel.name },
     validationSchema:
