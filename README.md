@@ -2,6 +2,10 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/5807007207d2536af155/maintainability)](https://codeclimate.com/github/H9ko/frontend-project-lvl4/maintainability)
 
+Проект на фреймворке React с иcпользованием Redux .
+Использованы нововведения во фрейворке такие как функциональные компоненты и хуки. Redux с использованием redux tollkit. Валидация - formik+yup. 
+Стек  технологий : webpack, Bootstrap, React, Redux-tolkit, formik, yup, websocket.
+
 ### Requirements
 
 * [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
