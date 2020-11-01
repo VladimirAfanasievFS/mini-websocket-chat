@@ -8,7 +8,9 @@ import { actions as channelActions } from './channels';
 
 export const postMessage = createAsyncThunk(
   'postMessageStatus',
-  async ({ channelId, message, nickName, avatar, timestamp }) => {
+  async ({
+    channelId, message, nickName, avatar, timestamp,
+  }) => {
     const response = await Axios.post(routes.channelMessagesPath(channelId), {
       data: {
         attributes: {
