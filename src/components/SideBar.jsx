@@ -36,7 +36,7 @@ const SideBar = ({ className }) => {
   };
 
   const renderSettingButtons = (channel) => (
-    <div>
+    <div className="d-flex">
       <button
         type="button"
         onClick={handleClickRename(channel)}
@@ -55,28 +55,27 @@ const SideBar = ({ className }) => {
   );
   return (
     <div className={className}>
-      <div className="d-flex p-2 mb-2 bg-info text-white">
+      <div className="p-2 border-bottom bg-primary text-center text-light">
         <b>{`Current User: ${nickName}`}</b>
       </div>
-      <div className="d-flex mb-2">
-        <span>Channels</span>
+      <div className="d-flex p-2 border-bottom border-primary align-center ">
+        <div className="my-auto h6">Channels</div>
         <button
           type="button"
           onClick={handleClickAdd}
-          className="btn btn-link p-0 ml-auto"
+          className="btn btn-link ml-auto"
         >
           <FontAwesomeIcon icon={faPlus} />
         </button>
       </div>
-      <ul className="nav flex-column nav-pills nav-fill">
+      <ul className="nav flex-column nav-pills nav-fill text-white w-100 overflow-auto">
         {channels.map((channel) => {
-          const channelClass = cn('nav-link btn', {
-            active: channel.id === currentChannelId,
+          const channelClass = cn('nav-link btn w-100 text-left', {
           });
           return (
-            <li key={channel.id} className="nav-item d-flex justify-content-between">
+            <li key={channel.id} className="nav-item p-2 d-flex border-bottom justify-content-between">
               <button onClick={handleClickChannel(channel.id)} type="button" className={channelClass}>
-                {channel.name}
+                {`# ${channel.name}`}
               </button>
               {channel.removable && renderSettingButtons(channel)}
             </li>
