@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Image } from 'react-bootstrap';
 import { getChannels, getCurrentChannelId } from '../selectors';
-import NickNameContext from '../lib/context';
+import userDataContext from '../lib/context';
 import { actions } from '../slices';
 
 const SideBar = ({ className }) => {
   const dispatch = useDispatch();
-  const nickName = useContext(NickNameContext);
+  const { nickName, avatar } = useContext(userDataContext);
   const currentChannelId = useSelector(getCurrentChannelId);
   const channels = useSelector(getChannels);
   const handleClickChannel = (id) => () => {
@@ -55,8 +56,19 @@ const SideBar = ({ className }) => {
   );
   return (
     <div className={className}>
-      <div className="p-2 border-bottom bg-primary text-center text-light">
-        <b>{`Current User: ${nickName}`}</b>
+      <div className="p-2 border-bottom bg-primary text-center text-light d-flex align-items-center">
+        <Image
+          width={64}
+          height={64}
+          roundedCircle
+          className="mr-2 p-1"
+          src={avatar}
+          alt="Avatar"
+        />
+        <div>
+          <div>{'Current User: '}</div>
+          <div>{nickName}</div>
+        </div>
       </div>
       <div className="d-flex p-2 border-bottom border-primary align-center ">
         <div className="my-auto h6">Channels</div>
@@ -71,6 +83,7 @@ const SideBar = ({ className }) => {
       <ul className="nav flex-column nav-pills nav-fill text-white w-100 overflow-auto">
         {channels.map((channel) => {
           const channelClass = cn('nav-link btn w-100 text-left', {
+            active: currentChannelId === channel.id,
           });
           return (
             <li key={channel.id} className="nav-item p-2 d-flex border-bottom justify-content-between">

@@ -2,5 +2,5 @@
 import React from 'react';
 
 
-const NickNameContext = React.createContext();
-export default NickNameContext;
+const userDataContext = React.createContext();
+export default userDataContext;

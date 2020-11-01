@@ -8,20 +8,34 @@ import { InputGroup, Button, Alert } from 'react-bootstrap';
 import { faSpinner, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-import NickNameContext from '../lib/context';
+import userDataContext from '../lib/context';
 import { asyncActions } from '../slices';
 
 const InputMessage = ({ currentChannelId }) => {
   const dispatch = useDispatch();
   const inputChatRef = useRef();
-  const nickName = useContext(NickNameContext);
+  const { nickName, avatar } = useContext(userDataContext);
 
   const handleSubmit = async (values, { resetForm, setErrors }) => {
     try {
+      const date = new Date();
+
+      const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long',
+        timezone: 'UTC',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      };
       const resultAction = await dispatch(asyncActions.postMessage({
         channelId: currentChannelId,
         message: values.inputChat,
         nickName,
+        avatar,
+        timestamp: date.toLocaleString('ru', options),
       }));
       unwrapResult(resultAction);
       resetForm();

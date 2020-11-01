@@ -8,8 +8,8 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import { Provider } from 'react-redux';
 import App from './components/App';
-import NickNameContext from './lib/context';
-import nickName from './lib/nickName';
+import userDataContext from './lib/context';
+import userData from './lib/userData';
 import reducers, { actions } from './slices';
 import connectSocket from './socket';
 
@@ -51,9 +51,9 @@ export default (gon) => {
 
   ReactDOM.render(
     <Provider store={store}>
-      <NickNameContext.Provider value={nickName}>
+      <userDataContext.Provider value={userData}>
         <App />
-      </NickNameContext.Provider>
+      </userDataContext.Provider>
     </Provider>,
     document.getElementById('chat'),
   );
