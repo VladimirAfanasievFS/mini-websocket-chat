@@ -1,6 +1,4 @@
-[![Github Actions Status](https://github.com/hexlet-components/projects-frontend-l4-server/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-components/projects-frontend-l4-server/actions)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/5807007207d2536af155/maintainability)](https://codeclimate.com/github/H9ko/frontend-project-lvl4/maintainability)
+[![Github Actions Status](https://github.com/hexlet-components/projects-frontend-l4-server/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-components/projects-frontend-l4-server/actions)  [![Maintainability](https://api.codeclimate.com/v1/badges/5807007207d2536af155/maintainability)](https://codeclimate.com/github/H9ko/frontend-project-lvl4/maintainability)
 
 # Приложение чата, аналог slack 
 
