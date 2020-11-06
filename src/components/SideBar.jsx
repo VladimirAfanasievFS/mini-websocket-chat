@@ -80,21 +80,24 @@ const SideBar = ({ className }) => {
           <FontAwesomeIcon icon={faPlus} />
         </button>
       </div>
-      <ul className="nav flex-column nav-pills nav-fill text-white w-100 overflow-auto">
-        {channels.map((channel) => {
-          const channelClass = cn('nav-link btn w-100 text-left', {
-            active: currentChannelId === channel.id,
-          });
-          return (
-            <li key={channel.id} className="nav-item p-2 d-flex border-bottom justify-content-between">
-              <button onClick={handleClickChannel(channel.id)} type="button" className={channelClass}>
-                {`# ${channel.name}`}
-              </button>
-              {channel.removable && renderSettingButtons(channel)}
-            </li>
-          );
-        })}
-      </ul>
+      <div className="overflow-auto flex-fill">
+        <ul className="nav flex-column nav-pills nav-fill text-white w-100 ">
+          {channels.map((channel) => {
+            const channelClass = cn('nav-link btn w-100 text-left', {
+              active: currentChannelId === channel.id,
+            });
+            return (
+              <li key={channel.id} className="nav-item p-2 d-flex border-bottom justify-content-between">
+                <button onClick={handleClickChannel(channel.id)} type="button" className={channelClass}>
+                  {`# ${channel.name}`}
+                </button>
+                {channel.removable && renderSettingButtons(channel)}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
     </div>
   );
 };

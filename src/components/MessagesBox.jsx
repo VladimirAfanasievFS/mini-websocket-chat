@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, Media } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import cn from 'classnames';
+import { Element, scroller } from 'react-scroll';
 import { getMessages } from '../selectors';
 
 const MessagesBox = ({ currentChannelId }) => {
   const currentChannelMessages = useSelector(getMessages(currentChannelId));
-  // const isSelfMessage = CurrentUserName === name;
-  const messageClassNames = cn({
-    'm-1 p-2': true,
-    'text-wrap text-break': true,
-    // 'bg-light rounded-pill': isSelfMessage
-  });
+  useEffect(() => {
+    const scrollTo = async () => {
+      await scroller.scrollTo('scroll-container-element', {
+        duration: 0,
+        delay: 0,
+        containerId: 'messages-box',
+      });
+    };
+    scrollTo();
+  }, [currentChannelMessages]);
+
+
   return (
-    <div id="messages-box" className="chat-messages overflow-auto mb-3">
+    <div id="messages-box" className="chat-messages overflow-auto mb-3 mt-auto">
       {currentChannelMessages && currentChannelMessages.map(({
         id, avatar, nickName, message, timestamp,
       }) => (
-        <Media key={id} className={messageClassNames}>
+        <Media key={id} className="m-1 p-2">
           <Image
             width={64}
             height={64}
@@ -32,10 +38,11 @@ const MessagesBox = ({ currentChannelId }) => {
               {' '}
               <small>{timestamp}</small>
             </h6>
-            <p>{message}</p>
+            <div>{message}</div>
           </Media.Body>
         </Media>
       ))}
+      <Element id="scroll-container-element" />
     </div>
   );
 };

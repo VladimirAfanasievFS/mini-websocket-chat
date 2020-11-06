@@ -5,8 +5,9 @@ html.h-100(lang="en")
     // script(src=assetPath('main.css'))
     script.
       var gon = !{JSON.stringify(gon)};
-  body.d-flex.flex-column.h-100
-    .container.h-100.overflow-hidden
-      .h-100#chat
+  body.h-100
+    .d-flex.flex-column.h-100
+      .container-fluid.h-100.p-0
+        .h-100#chat
       // block content
     script(src=assetPath('main.js'))

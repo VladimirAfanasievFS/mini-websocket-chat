@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputGroup, Button, Alert } from 'react-bootstrap';
 import { faSpinner, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { unwrapResult } from '@reduxjs/toolkit';
-
 import userDataContext from '../lib/context';
 import { asyncActions } from '../slices';
 
@@ -15,7 +14,6 @@ const InputMessage = ({ currentChannelId }) => {
   const dispatch = useDispatch();
   const inputChatRef = useRef();
   const { nickName, avatar } = useContext(userDataContext);
-
   const handleSubmit = async (values, { resetForm, setErrors }) => {
     try {
       const date = new Date();
@@ -46,7 +44,7 @@ const InputMessage = ({ currentChannelId }) => {
     }
   };
   return (
-    <div className="mt-auto">
+    <div>
       <Formik
         initialValues={{
           inputChat: '',

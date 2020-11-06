@@ -12,8 +12,8 @@ const App = () => {
   const currentChannelId = useSelector(getCurrentChannelId);
 
   return (
-    <div className="row h-100 pb-3 border rounded border-primary bg-light no-gutters">
-      <SideBar className="col-3 border-right border-primary h-100" />
+    <div className="row h-100 pb-3 border rounded border-primary bg-light no-gutters overflow-hidden">
+      <SideBar className="col-3 border-right border-primary h-100 d-flex flex-column" />
       <Chat className="col h-100 px-4 pt-2">
         <MessagesBox currentChannelId={currentChannelId} />
         <InputMessage currentChannelId={currentChannelId} />
